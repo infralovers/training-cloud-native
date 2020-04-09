@@ -2,8 +2,6 @@ FROM node:10.16.3-slim
 
 ENV NODE_ENV=production
 
-#RUN mkdir /app
-
 # Change workin directory
 WORKDIR /app
 

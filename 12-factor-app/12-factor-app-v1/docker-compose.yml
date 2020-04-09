@@ -33,19 +33,8 @@ services:
     image: mongo:4
     volumes:
       - data:/data/db
-    expose:
-      - "27017"  
     networks:
       - internal
-
-  redis:
-    image: redis:alpine
-    networks:
-      - internal
-    expose:
-      - "6379"  
-
-
 
   traefik:
     image: traefik:v2.1
