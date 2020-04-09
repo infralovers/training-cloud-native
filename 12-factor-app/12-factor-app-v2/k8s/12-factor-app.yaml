@@ -1,71 +1,42 @@
-#########################################################
-# Common Environment variables ConfigMap
-#########################################################
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 12-factor-app
+---  
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: common-env
+  namespace: 12-factor-app
 data:
   NAMESPACE: ""
   LOGLEVEL: info
   SERVICEDIR: services
-  
   TRANSPORTER: redis://redis:6379
-  
-  
-  
-  
-  
-  
-  
   MONGO_URI: mongodb://mongo/12-factor-app
-
 ---
-#########################################################
-# Service for Moleculer API Gateway service
-#########################################################
 apiVersion: v1
 kind: Service
 metadata:
   name: api
+  namespace: 12-factor-app
 spec:
   selector:
     app: api
   ports:
   - port: 3000
     targetPort: 3000
-
 ---
-#########################################################
-# Ingress for Moleculer API Gateway
-#########################################################
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: ingress
-spec:
-  rules:
-  - host: 12-factor-app.127.0.0.1.nip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: api
-          servicePort: 3000
-
----
-#########################################################
-# API Gateway service
-#########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api
+  namespace: 12-factor-app
 spec:
   selector:
     matchLabels:
       app: api
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -73,7 +44,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: 12-factor-app
+        image: commandemy/12-factor-app:v0.1
         envFrom:
         - configMapRef:
             name: common-env
@@ -82,46 +53,16 @@ spec:
             value: api
 
 ---
-#########################################################
-# Greeter service
-#########################################################
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: greeter
-spec:
-  selector:
-    matchLabels:
-      app: greeter
-  replicas: 2
-  template:
-    metadata:
-      labels:
-        app: greeter
-    spec:
-      containers:
-      - name: greeter
-        image: 12-factor-app
-        envFrom:
-        - configMapRef:
-            name: common-env
-        env:
-          - name: SERVICES
-            value: greeter
-
----
-#########################################################
-# Products service
-#########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: products
+  namespace: 12-factor-app
 spec:
   selector:
     matchLabels:
       app: products
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -129,7 +70,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: 12-factor-app
+        image: commandemy/12-factor-app:v0.1
         envFrom:
         - configMapRef:
             name: common-env
@@ -138,13 +79,11 @@ spec:
             value: products
 
 ---
-#########################################################
-# MongoDB server
-#########################################################
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongo
+  namespace: 12-factor-app
   labels:
     app: mongo
 spec:
@@ -173,13 +112,11 @@ spec:
             claimName: mongo-data
 
 ---
-#########################################################
-# Persistent volume for MongoDB
-#########################################################
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongo-data
+  namespace: 12-factor-app
   labels:
     name: mongo-data
 spec:
@@ -190,13 +127,11 @@ spec:
       storage: 100Mi
 
 ---
-#########################################################
-# MongoDB service
-#########################################################
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo
+  namespace: 12-factor-app
   labels:
     app: mongo
 spec:
@@ -204,18 +139,13 @@ spec:
     - port: 27017
       targetPort: 27017
   selector:
-    app: mongo          
-
-
-
+    app: mongo
 ---
-#########################################################
-# Redis service
-#########################################################
 apiVersion: v1
 kind: Service
 metadata:
   name: redis
+  namespace: 12-factor-app
 spec:
   selector:
     app: redis
@@ -223,15 +153,12 @@ spec:
   - port: 6379
     name: redis
     targetPort: 6379
-
 ---
-#########################################################
-# Redis server (transporter/cacher)
-#########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
+  namespace: 12-factor-app
 spec:
   selector:
     matchLabels:
@@ -250,8 +177,19 @@ spec:
         ports:
         - containerPort: 6379
           name: redis
-
-
-
-
-
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "redis-cli -h $(hostname) ping"
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - "redis-cli -h $(hostname) ping"
+          initialDelaySeconds: 20
+          periodSeconds: 3  

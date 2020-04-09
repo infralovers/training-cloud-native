@@ -17,7 +17,7 @@ spec:
   selector:
     matchLabels:
       app: api
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -42,7 +42,7 @@ spec:
   selector:
     matchLabels:
       app: products
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
