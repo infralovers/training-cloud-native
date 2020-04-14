@@ -1,6 +1,7 @@
 kind: ServiceMonitor
 metadata:
   name: api
+  namespace: 12-factor-app
 spec:
   selector:
     matchLabels:
