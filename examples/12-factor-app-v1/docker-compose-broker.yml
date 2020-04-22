@@ -1,0 +1,50 @@
+version: "3.3"
+
+services:
+
+  api:
+    build:
+      context: .
+    image: 12-factor-app:v0.1
+    env_file: docker-compose.env
+    environment:
+      SERVICES: api
+    networks:
+      - internal
+    ports:
+      - 8080:3000
+
+  products:
+    build:
+      context: .
+    image: 12-factor-app:v0.1
+    env_file: docker-compose.env
+    environment:
+      SERVICES: products
+    depends_on:
+      - mongo
+    networks:
+      - internal
+
+# don't forget to update the docker-compose.env TRANSPORTER=nats://nats:4222
+  nats:
+    image: 'nats:2.1'
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+    networks:
+      - internal
+
+  mongo:
+    image: mongo:4
+    volumes:
+      - data:/data/db
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  data:

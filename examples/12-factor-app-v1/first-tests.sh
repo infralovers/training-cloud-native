@@ -14,6 +14,12 @@ echo "-----------   listing all the entries  ------------"
 
 curl "${API_ENDPOINT}/products"
 
+# play with jq!
+# sudo snap install jq
+
+sudo yum install jq -y
+curl -s "${API_ENDPOINT}/products" | jq
+
 echo "-----------   creating a few entries  ------------"
 
 curl -XPOST "${API_ENDPOINT}/products" \
@@ -24,15 +30,12 @@ curl -XPOST "${API_ENDPOINT}/products" \
 -H 'Content-Type: application/json' \
 --data-raw '{"name": "MacBook Pro", "price": 3999}'
 
-curl -XPOST "${API_ENDPOINT}/products" \
+curl -s -XPOST "${API_ENDPOINT}/products" \
 -H 'Content-Type: application/json' \
---data-raw '{"name": "Surface Pro", "price": 3999}'
+--data-raw '{"name": "Surface Pro", "price": 3999}' | jq
 
 echo "-----------   listing all the entries  ------------"
 
-# play with jq!
-# sudo snap install jq
-sudo yum install jq -y
 curl -s "${API_ENDPOINT}/products" | jq
 
 echo "-----------   show an entry   ------------"
