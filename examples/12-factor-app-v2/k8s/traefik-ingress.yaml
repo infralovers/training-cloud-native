@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroute
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`microk8s-git-01.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroutetls
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`microk8s-git-01.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
