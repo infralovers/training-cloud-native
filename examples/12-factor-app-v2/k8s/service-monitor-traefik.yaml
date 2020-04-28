@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: traefik
+  namespace: 12-factor-app
+spec:
+  selector:
+    matchLabels:
+      app: traefik
+  namespaceSelector:
+    name: 12-factor-app      
+  endpoints:
+  - port: metrics
