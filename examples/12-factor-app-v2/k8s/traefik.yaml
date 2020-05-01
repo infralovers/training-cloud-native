@@ -201,6 +201,8 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   namespace: 12-factor-app
+  #annotations:
+  #  "sidecar.jaegertracing.io/inject": "true"
   name: traefik
   labels:
     app: traefik
@@ -229,12 +231,21 @@ spec:
             - --certificatesresolvers.myresolver.acme.email=foo@you.com
             - --certificatesresolvers.myresolver.acme.storage=acme.json
             - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+            ### PROMETHEUS ###
             #- --metrics.prometheus=true
             #- --metrics.prometheus.entryPoint=metrics
             #- --entryPoints.metrics.address=:8082  
             #- --metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000
             #- --metrics.prometheus.addEntryPointsLabels=true
             #- --metrics.prometheus.addServicesLabels=true
+            ### JAEGER ###
+            #- --tracing.jaeger=true
+            #- --tracing.jaeger.samplingServerURL=http://127.0.0.1:5778/sampling
+            #- --tracing.jaeger.samplingType=const
+            #- --tracing.jaeger.samplingParam=1.0
+            #- --tracing.jaeger.localAgentHostPort=127.0.0.1:6831
+            #- --tracing.jaeger.propagation=jaeger
+            #- --tracing.jaeger.traceContextHeaderName=uber-trace-id 
 
           ports:
             - name: web
