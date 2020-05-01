@@ -189,6 +189,24 @@ module.exports = {
 		}
 	},
 
+	// tracing: {
+	// 	enabled: true,
+	// 	exporter: {
+	// 		type: "Jaeger",
+	// 		options: {
+	// 			endpoint: null,
+	// 			host: "127.0.0.1",
+	// 			port: 6832,
+	// 			sampler: {
+	// 				type: "Const",
+	// 				options: {}
+	// 			},
+	// 			tracerOptions: {},
+	// 			defaultTags: null
+	// 		}
+	// 	}
+	// },
+
 	// Register custom middlewares
 	middlewares: [],
 
