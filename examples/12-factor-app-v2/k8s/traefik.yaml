@@ -172,7 +172,7 @@ metadata:
         app: traefik
 spec:
   externalIPs:
-    - 10.0.0.242 # IP of your centos host
+    - 10.0.0.242 # IP of your centos host (hostname -i)
   ports:
     - protocol: TCP
       name: web
