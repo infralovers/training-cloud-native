@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroute
+  namespace: monitoring
+spec:
+  entryPoints:
+    - web
+  routes: # change grafana.k8s-git-01.commandemy.training to your host DNS
+    - match: Host(`grafana.k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: grafana
+          port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroutetls
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes: # change grafana.k8s-git-01.commandemy.training to your host DNS
+    - match: Host(`grafana.k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: grafana
+          port: 3000
