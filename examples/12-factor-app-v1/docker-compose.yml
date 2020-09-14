@@ -12,7 +12,7 @@ services:
     networks:
       - internal
     ports:
-      - 8080:3000
+      - 8181:3000
     depends_on:
       - mongo
 
