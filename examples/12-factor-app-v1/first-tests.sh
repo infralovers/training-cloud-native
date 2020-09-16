@@ -5,7 +5,7 @@
 # don't repeat yourself!
 
 API_IP=localhost
-API_PORT=8080
+API_PORT=8181
 API_ENDPOINT=http://${API_IP}:${API_PORT}/api
 
 # list current items:
