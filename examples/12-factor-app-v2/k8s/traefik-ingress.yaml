@@ -7,8 +7,8 @@ metadata:
 spec:
   entryPoints:
     - web
-  routes: # change k8s-git-01.commandemy.training to your host DNS
-    - match: Host(`k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+  routes: # change k8s.cno-user-XX-i-XX.commandemy.training to your host DNS
+    - match: Host(`k8s.cno-user-XX-i-XX.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: api
@@ -24,8 +24,8 @@ spec:
     - websecure
   tls:
     certResolver: myresolver
-  routes: # change k8s-git-01.commandemy.training to your host DNS
-    - match: Host(`k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+  routes: # change k8s.cno-user-XX-i-XX.commandemy.training to your host DNS
+    - match: Host(`k8s.cno-user-XX-i-XX.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: api

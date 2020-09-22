@@ -2,13 +2,13 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: simpleingressroute
+  name: simpleingressroutegrafana
   namespace: monitoring
 spec:
   entryPoints:
     - web
-  routes: # change grafana.k8s-git-01.commandemy.training to your host DNS
-    - match: Host(`grafana.k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+  routes: # change grafana.cno-user-XX-i-0X.commandemy.training to your host DNS
+    - match: Host(`grafana.cno-user-XX-i-0X.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: grafana
@@ -17,15 +17,15 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: ingressroutetls
+  name: ingressroutetlsgrafana
   namespace: monitoring
 spec:
   entryPoints:
     - websecure
   tls:
     certResolver: myresolver
-  routes: # change grafana.k8s-git-01.commandemy.training to your host DNS
-    - match: Host(`grafana.k8s-git-01.commandemy.training`) && PathPrefix(`/`)
+  routes: # change grafana.cno-user-XX-i-0X.commandemy.training to your host DNS
+    - match: Host(`grafana.cno-user-XX-i-0X.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: grafana
