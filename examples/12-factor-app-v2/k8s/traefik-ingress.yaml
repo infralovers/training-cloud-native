@@ -7,7 +7,7 @@ metadata:
 spec:
   entryPoints:
     - web
-  routes: # change k8s.cno-user-XX-i-XX.commandemy.training to your host DNS
+  routes: # change k8s.cno-user-XX-i-0X.commandemy.training to your host DNS
     - match: Host(`k8s.cno-user-XX-i-0X.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
@@ -24,7 +24,7 @@ spec:
     - websecure
   tls:
     certResolver: myresolver
-  routes: # change k8s.cno-user-XX-i-XX.commandemy.training to your host DNS
+  routes: # change k8s.cno-user-XX-i-0X.commandemy.training to your host DNS
     - match: Host(`k8s.cno-user-XX-i-0X.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
