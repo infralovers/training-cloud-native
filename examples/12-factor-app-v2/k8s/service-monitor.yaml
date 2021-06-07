@@ -8,6 +8,7 @@ spec:
     matchLabels:
       app: api
   namespaceSelector:
-    name: 12-factor-app      
+    matchNames:
+      - 12-factor-app
   endpoints:
   - port: metrics # Here we use the name of the port defined earlier
