@@ -8,6 +8,7 @@ spec:
     matchLabels:
       app: traefik
   namespaceSelector:
-    name: 12-factor-app      
+    matchNames:
+      - 12-factor-app
   endpoints:
   - port: metrics
