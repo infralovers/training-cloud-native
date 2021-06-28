@@ -172,7 +172,7 @@ metadata:
         app: traefik
 spec:
   externalIPs:
-    - <ENV-IP> #10.0.0.242 IP of your centos host (hostname -i)
+    - <ENV-IP> #e.g. 10.0.0.242 IP of your MicroK8s host (hostname -I)
   ports:
     - protocol: TCP
       name: web
