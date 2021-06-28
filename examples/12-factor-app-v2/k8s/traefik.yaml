@@ -172,7 +172,7 @@ metadata:
         app: traefik
 spec:
   externalIPs:
-    - 10.0.0.242 # IP of your centos host (hostname -i)
+    - <ENV-IP> #10.0.0.242 IP of your centos host (hostname -i)
   ports:
     - protocol: TCP
       name: web
@@ -184,7 +184,7 @@ spec:
       name: websecure
       port: 443
     - protocol: TCP
-      name: metrics  
+      name: metrics
       port: 8082
   selector:
     app: traefik
@@ -234,7 +234,7 @@ spec:
             ### PROMETHEUS ###
             #- --metrics.prometheus=true
             #- --metrics.prometheus.entryPoint=metrics
-            #- --entryPoints.metrics.address=:8082  
+            #- --entryPoints.metrics.address=:8082
             #- --metrics.prometheus.buckets=0.100000, 0.300000, 1.200000, 5.000000
             #- --metrics.prometheus.addEntryPointsLabels=true
             #- --metrics.prometheus.addServicesLabels=true
@@ -245,7 +245,7 @@ spec:
             #- --tracing.jaeger.samplingParam=1.0
             #- --tracing.jaeger.localAgentHostPort=127.0.0.1:6831
             #- --tracing.jaeger.propagation=jaeger
-            #- --tracing.jaeger.traceContextHeaderName=uber-trace-id 
+            #- --tracing.jaeger.traceContextHeaderName=uber-trace-id
 
           ports:
             - name: web
@@ -255,4 +255,4 @@ spec:
             - name: admin
               containerPort: 8080
             - name: metrics
-              containerPort: 8082  
+              containerPort: 8082
