@@ -51,7 +51,7 @@ spec:
   tls:
     certResolver: myresolver
   routes:
-    - match: Host(`whoami.cno-user-05.yak.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`whoami.cno-user-<ENV-USER-ID>.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: whoami
@@ -65,7 +65,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`whoami.cno-user-05.yak.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`whoami.cno-user-<ENV-USER-ID>.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: whoami
