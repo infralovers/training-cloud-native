@@ -1,17 +1,17 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: StressChaos
 metadata:
-  name: burn-cpu
+  name: burn-cpu-100
   namespace: chaos-testing
 spec:
   mode: one
   selector:
+    namespaces:
+      - 12-factor-app
     labelSelectors:
-      "app.kubernetes.io/component": "app=api"
-  stressors: 
-    cpu: 
+      "app": "products"
+  stressors:
+    cpu:
       workers: 1
       load: 100
   duration: "30s"
-  scheduler:
-    cron: "@every 2m"

@@ -1,14 +1,16 @@
 apiVersion: chaos-mesh.org/v1alpha1
 kind: NetworkChaos
 metadata:
-  name: network-bandwidth-example
+  name: network-bandwidth-100kbps
   namespace: chaos-testing
 spec:
   action: bandwidth
   mode: one
   selector:
+    namespaces:
+      - 12-factor-app
     labelSelectors:
-      "app.kubernetes.io/component": "app=api"
+      "app": "api"
   bandwidth:
     rate: 100kbps
     limit: 100
@@ -16,5 +18,3 @@ spec:
     peakrate: 1000000
     minburst: 1000000
   duration: "10s"
-  scheduler:
-    cron: "@every 15s"

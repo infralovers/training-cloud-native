@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: chaos-dashboard
+  namespace: chaos-testing
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`chaos.cno-user-<ENV-USER-ID>.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: chaos-dashboard
+          port: 2333
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: chaos-testing-tls
+  namespace: chaos-testing
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`chaos.cno-user-<ENV-USER-ID>.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: chaos-dashboard
+          port: 2333
