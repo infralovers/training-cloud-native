@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingresss
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+
+spec:
+  rules:
+    - host: k8s.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port: 
+                  number: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-tls-ingresss
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+spec:
+  rules:
+    - host: k8s.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port: 
+                  number: 3000
+
