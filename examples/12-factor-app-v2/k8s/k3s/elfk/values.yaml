@@ -1,0 +1,49 @@
+elasticsearch:
+  replicas: 1
+  minimumMasterNodes: 1
+  resources:
+    limits:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+    requests:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+
+kibana:
+  #elasticsearchHosts: "elasticsearch-master.default.svc.cluster.local"
+  resources:
+    limits:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+    requests:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+
+logstash:
+  persistence:
+    enabled: true
+
+  logstashConfig:
+    logstash.yml: |
+      http.host: 0.0.0.0
+      xpack.monitoring.enabled: false
+  resources:
+    limits:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+    requests:
+      cpu: 200m # the CPU limit is define in milicore (m)
+      memory: 1Gi # the Memory is define in Mebibytes (Mi)
+
+# to get logs from docker you have to change the paths to /var/lib/docker/* 
+# or /var/lib/docker-desktop/containers/, but this does not work for WSL or WSL2 systems
+filebeat:
+  filebeat.inputs:
+  - input_type: log
+    enabled: true
+    paths: 
+      - /var/log/containers/*.log
+      - /var/log/pods/*/*/*.log
+  
+  output.logstash:
+    hosts: ["elfk-logstash.default.svc.cluster.local"]
