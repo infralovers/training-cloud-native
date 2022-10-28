@@ -6,7 +6,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: prom.cno-user-01-01.rabbit.commandemy.training
+    - host: prom.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
         paths:
           - path: /
@@ -25,7 +25,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
-    - host: prom.cno-user-01-01.rabbit.commandemy.training
+    - host: prom.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
         paths:
           - path: /
