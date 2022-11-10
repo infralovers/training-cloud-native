@@ -1,0 +1,14 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroute
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`jaeger.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: jaeger-query
+          port: 16686
