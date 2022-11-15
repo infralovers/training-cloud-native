@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroutegrafana
+  namespace: monitoring
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`grafana.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: prometheus-grafana
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroutetlsgrafana
+  namespace: monitoring
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`grafana.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: prometheus-grafana
+          port: 80
