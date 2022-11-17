@@ -1,0 +1,8 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelector:
+      matchLabels:
+        team: monitoring
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        prometheus: monitoring
