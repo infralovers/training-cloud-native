@@ -4,7 +4,7 @@ metadata:
   name: api
   namespace: 12-factor-app
   labels:
-    team: frontend
+    release: prometheus
 spec:
   selector:
     matchLabels:
