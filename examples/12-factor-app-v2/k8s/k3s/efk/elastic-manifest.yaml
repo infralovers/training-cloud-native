@@ -1,0 +1,36 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: efk
+  namespace: logging
+spec:
+  version: 8.1.2
+  nodeSets:
+  - name: default
+    count: 1    # One node elastic search cluster
+    podTemplate:
+    # Limiting Resources consumption
+      spec:
+        containers:
+        - name: elasticsearch
+          resources:
+            requests:
+              memory: 1Gi
+            limits:
+              memory: 1Gi
+    config:
+      node.store.allow_mmap: false # Disable memory mapping
+    volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
+          storageClassName: local-path
+  http:
+    tls: # Disabling TLS automatic configuration.
+      selfSignedCertificate:
+        disabled: true
