@@ -5,7 +5,7 @@ metadata:
   namespace: logging
 spec:
   version: 8.1.2
-  count: 2 # Elastic Search statefulset deployment with two replicas
+  count: 1 # Elastic Search statefulset deployment with one replicas
   elasticsearchRef:
     name: "efk"
   http:  # NOTE disabling kibana automatic TLS configuration
