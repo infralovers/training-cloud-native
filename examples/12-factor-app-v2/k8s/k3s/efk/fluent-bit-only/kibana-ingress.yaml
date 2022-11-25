@@ -4,13 +4,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kibana-ingress
-  namespace: elastic
+  namespace: logging
   annotations:
     # HTTPS as entry point
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     # Enable TLS
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
+  tls:
+    - secretName: kibana-tls
   rules:
     - host: kibana.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
@@ -19,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: kibana-kibana
+                name: elastic-kb-http
                 port:
                   number: 5601
 ---
@@ -28,7 +30,7 @@ kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: kibana-redirect
-  namespace: elastic
+  namespace: logging
   annotations:
     # Use redirect Midleware configured
     traefik.ingress.kubernetes.io/router.middlewares: traefik-redirect@kubernetescrd
@@ -43,6 +45,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: kibana-kibana
+                name: elastic-kb-http
                 port:
                   number: 5601
