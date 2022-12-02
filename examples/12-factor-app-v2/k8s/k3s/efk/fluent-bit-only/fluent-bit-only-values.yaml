@@ -62,7 +62,7 @@ config:
         Alias input.host
         Tag host.*
         DB /var/log/fluentbit/flb_host.db
-        Path /var/log/auth.log,/var/log/syslog
+        Path /var/log/auth.log,/var/log/syslog,/var/log/containers
         Path_Key filename
         Mem_Buf_Limit 5MB
         storage.type filesystem
@@ -86,6 +86,7 @@ config:
         tls False
         tls.verify False
         Retry_Limit False
+        Replace_Dots On
 
   # fluent-bit.config PARSERS:
   customParsers: |
