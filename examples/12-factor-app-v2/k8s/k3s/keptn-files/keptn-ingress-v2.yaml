@@ -1,0 +1,42 @@
+---
+# HTTPS Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingressroutetlskeptn
+  namespace: keptn
+  annotations:
+    # HTTPS as entry point
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  rules:
+    - host: keptn.cno-user-01-01.rabbit.commandemy.training
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway-nginx
+                port:
+                  number: 80
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: simpleingressroutekeptn
+  namespace: keptn
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: keptn.cno-user-01-01.rabbit.commandemy.training
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway-nginx
+                port:
+                  number: 80
