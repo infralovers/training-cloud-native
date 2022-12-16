@@ -1,0 +1,32 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: simpleingressroutegrafana
+  namespace: keptn
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`keptn.cno-user-01-01.rabbit.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api-gateway-nginx
+          port: 80
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ingressroutetlsgrafana
+  namespace: keptn
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`keptn.cno-user-01-01.rabbit.commandemy.training`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api-gateway-nginx
+          port: 80
