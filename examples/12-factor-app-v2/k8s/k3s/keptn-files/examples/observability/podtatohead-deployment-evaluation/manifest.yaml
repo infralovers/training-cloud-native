@@ -5,6 +5,92 @@ metadata:
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
 ---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition1
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: available-cpus ## this query should pass
+      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+      evaluationTarget: ">1"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition2
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: available-cpus ## this query should fail
+      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+      evaluationTarget: ">1"
+    - name: consumed-memory  ## this query should pass
+      query: "sum(kube_node_status_capacity{resource='memory'})"
+      evaluationTarget: "<1000000000000"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  version: "1.3"
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.1.0
+    - name: podtato-head-left-leg
+      version: 0.1.0
+    - name: podtato-head-entry
+      version: 0.1.0
+    - name: podtato-head-right-arm
+      version: 0.1.0
+    - name: podtato-head-right-leg
+      version: 0.1.0
+    - name: podtato-head-hat
+      version: 0.1.0
+  postDeploymentTasks:
+    - post-deployment-hello
+  preDeploymentEvaluations:     #Comment out this four lines if you do not have a prometheus installation
+    - my-prometheus-definition1
+  postDeploymentEvaluations:
+    - my-prometheus-definition2
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: check-entry-service
+  namespace: podtato-kubectl
+spec:
+  function:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/http.ts
+    parameters:
+      map:
+        url: http://podtato-head-entry.podtato-kubectl.svc.cluster.local:9000
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationProvider
+metadata:
+  name: prometheus
+  namespace: podtato-kubectl
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: post-deployment-hello
+  namespace: podtato-kubectl
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Post-Deployment Task has been executed");
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
