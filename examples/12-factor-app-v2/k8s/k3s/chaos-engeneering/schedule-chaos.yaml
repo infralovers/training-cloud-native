@@ -1,0 +1,21 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: 12-factor-app
+  name: scheduled-pod-failure
+spec:
+  schedule: 5 * * * *
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: 2
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+        - 12-factor-app
+      labelSelectors:
+        app: api
+    mode: one
+    action: pod-failure
+    duration: 1h
+    gracePeriod: 0

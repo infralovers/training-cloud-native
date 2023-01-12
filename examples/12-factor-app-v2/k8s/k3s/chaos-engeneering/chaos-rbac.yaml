@@ -2,35 +2,31 @@ kind: ServiceAccount
 apiVersion: v1
 metadata:
   namespace: default
-  name: account-default-viewer-qjvha
+  name: account-cluster-manager-wdwnl
 
 ---
-kind: Role
+kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: default
-  name: role-default-viewer-qjvha
+  name: role-cluster-manager-wdwnl
 rules:
 - apiGroups: [""]
   resources: ["pods", "namespaces"]
   verbs: ["get", "watch", "list"]
-- apiGroups:
-  - chaos-mesh.org
+- apiGroups: ["chaos-mesh.org"]
   resources: [ "*" ]
-  verbs: ["get", "list", "watch"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: bind-default-viewer-qjvha
-  namespace: default
+  name: bind-cluster-manager-wdwnl
 subjects:
 - kind: ServiceAccount
-  name: account-default-viewer-qjvha
+  name: account-cluster-manager-wdwnl
   namespace: default
 roleRef:
-  kind: Role
-  name: role-default-viewer-qjvha
+  kind: ClusterRole
+  name: role-cluster-manager-wdwnl
   apiGroup: rbac.authorization.k8s.io
-
