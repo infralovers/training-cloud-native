@@ -1,10 +1,95 @@
----
 apiVersion: v1
 kind: Namespace
 metadata:
   name: podtato-kubectl
   annotations:
     keptn.sh/lifecycle-toolkit: "enabled"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationProvider
+metadata:
+  name: prometheus
+  namespace: podtato-kubectl
+spec:
+  targetServer: "http://prometheus-k8s.monitoring.svc.cluster.local:9090"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition1
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: available-cpus ## this query should pass
+      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+      evaluationTarget: ">1"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnEvaluationDefinition
+metadata:
+  name: my-prometheus-definition2
+  namespace: podtato-kubectl
+spec:
+  source: prometheus
+  objectives:
+    - name: available-cpus ## this query should fail
+      query: "sum(kube_pod_container_resource_limits{resource='cpu'}) - sum(kube_node_status_capacity{resource='cpu'})"
+      evaluationTarget: ">1"
+    - name: consumed-memory  ## this query should pass
+      query: "sum(kube_node_status_capacity{resource='memory'})"
+      evaluationTarget: "<1000000000000"
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: check-entry-service
+  namespace: podtato-kubectl
+spec:
+  function:
+    httpRef:
+      url: https://raw.githubusercontent.com/keptn/lifecycle-toolkit/main/functions-runtime/samples/ts/http.ts
+    parameters:
+      map:
+        url: http://podtato-head-entry.podtato-kubectl.svc.cluster.local:9000
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnTaskDefinition
+metadata:
+  name: post-deployment-hello
+  namespace: podtato-kubectl
+spec:
+  function:
+    inline:
+      code: |
+        console.log("Post-Deployment Task has been executed");
+---
+apiVersion: lifecycle.keptn.sh/v1alpha1
+kind: KeptnApp
+metadata:
+  name: podtato-head
+  namespace: podtato-kubectl
+spec:
+  version: "1.3"
+  workloads:
+    - name: podtato-head-left-arm
+      version: 0.1.0
+    - name: podtato-head-left-leg
+      version: 0.1.0
+    - name: podtato-head-entry
+      version: 0.1.0
+    - name: podtato-head-right-arm
+      version: 0.1.0
+    - name: podtato-head-right-leg
+      version: 0.1.0
+    - name: podtato-head-hat
+      version: 0.1.0
+  postDeploymentTasks:
+    - post-deployment-hello
+  preDeploymentEvaluations:     #Comment out this four lines if you do not have a prometheus installation
+    - my-prometheus-definition1
+  postDeploymentEvaluations:
+    - my-prometheus-definition2
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -21,8 +106,11 @@ spec:
     metadata:
       labels:
         component: podtato-head-entry
+      annotations:
         keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-entry
+        keptn.sh/version: 0.1.0
+        keptn.sh/post-deployment-tasks: post-deployment-hello
     spec:
       terminationGracePeriodSeconds: 5
       initContainers:
@@ -31,7 +119,7 @@ spec:
         command: ['sh', '-c', 'sleep 30']
       containers:
       - name: server
-        image: ghcr.io/podtato-head/entry:0.2.7
+        image: ghcr.io/podtato-head/entry:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 9000
@@ -53,9 +141,8 @@ spec:
   - name: http
     port: 9000
     protocol: TCP
-    nodePort: 30900
     targetPort: 9000
-  type: NodePort
+  type: LoadBalancer
   # change to NodePort if no LoadBalancer controller is available
   # type: NodePort
 ---
@@ -74,16 +161,18 @@ spec:
     metadata:
       labels:
         component: podtato-head-hat
-        app.kubernetes.io/version: 0.1.0
-      annotations:
-        app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/name: podtato-head-hat
         keptn.sh/pre-deployment-tasks: check-entry-service
+        keptn.sh/pre-deployment-evaluations: my-prometheus-definition1
+        keptn.sh/post-deployment-evaluations: my-prometheus-definition1
+      annotations:
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-hat
+        keptn.sh/version: 0.1.0
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/hat:0.2.7
+          image:  ghcr.io/podtato-head/hat:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -124,14 +213,15 @@ spec:
       labels:
         component: podtato-head-left-leg
       annotations:
-        app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/name: podtato-head-left-leg
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-left-leg
+        keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-leg:0.2.7
+          image:  ghcr.io/podtato-head/left-leg:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -171,15 +261,16 @@ spec:
     metadata:
       labels:
         component: podtato-head-left-arm
-        app.kubernetes.io/part-of: podtato-head
       annotations:
-        app.kubernetes.io/name: podtato-head-left-arm
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-left-arm
+        keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/left-arm:0.2.7
+          image:  ghcr.io/podtato-head/left-arm:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -220,14 +311,15 @@ spec:
       labels:
         component: podtato-head-right-leg
       annotations:
-        app.kubernetes.io/part-of: podtato-head
-        app.kubernetes.io/name: podtato-head-right-leg
+        keptn.sh/app: podtato-head
+        keptn.sh/workload: podtato-head-right-leg
+        keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
     spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-leg:0.2.7
+          image:  ghcr.io/podtato-head/right-leg:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
@@ -268,7 +360,7 @@ spec:
       labels:
         component: podtato-head-right-arm
       annotations:
-        app.kubernetes.io/part-of: podtato-head
+        keptn.sh/app: podtato-head
         keptn.sh/workload: podtato-head-right-arm
         keptn.sh/version: 0.1.0
         keptn.sh/pre-deployment-tasks: check-entry-service
@@ -276,7 +368,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: server
-          image:  ghcr.io/podtato-head/right-arm:0.2.7
+          image:  ghcr.io/podtato-head/right-arm:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9000
