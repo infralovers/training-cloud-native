@@ -1,0 +1,7 @@
+resources:
+  limits:
+    cpu: 200m # the CPU limit is define in milicore (m)
+    memory: 1Gi # the Memory is define in Mebibytes (Mi)
+  requests:
+    cpu: 200m # the CPU limit is define in milicore (m)
+    memory: 1Gi # the Memory is define in Mebibytes (Mi)
