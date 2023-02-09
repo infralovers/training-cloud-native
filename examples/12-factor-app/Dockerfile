@@ -16,7 +16,8 @@ ENV SERVICEDIR=services
 
 # Expose API Port to the outside
 ENV PORT 3000
-EXPOSE $PORT
+EXPOSE 3000
+
 VOLUME ["/app/data/"]
 # Launch application
 CMD ["npm", "start"]
