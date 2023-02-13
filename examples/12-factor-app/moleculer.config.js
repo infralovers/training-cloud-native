@@ -152,7 +152,7 @@ module.exports = {
 
 	// Enable/disable built-in metrics function. More info: https://moleculer.services/docs/0.14/metrics.html
 	metrics: {
-		enabled: false,
+		enabled: process.env.METRICS_ENABLED == "true" || false,
 		// Available built-in reporters: "Console", "CSV", "Event", "Prometheus", "Datadog", "StatsD"
 		reporter: {
 			type: "Prometheus",
@@ -172,40 +172,23 @@ module.exports = {
 
 	// Enable built-in tracing function. More info: https://moleculer.services/docs/0.14/tracing.html
 	tracing: {
-		enabled: false,
+		enabled: process.env.TRACING_ENABLED == "true" || false,
 		// Available built-in exporters: "Console", "Datadog", "Event", "EventLegacy", "Jaeger", "Zipkin"
 		exporter: {
-			type: "Console", // Console exporter is only for development!
+			type: "Jaeger", // Console exporter is only for development!
 			options: {
-				// Custom logger
-				logger: null,
-				// Using colors
-				colors: true,
-				// Width of row
-				width: 100,
-				// Gauge width in the row
-				gaugeWidth: 40
+				endpoint: null,
+				host: "127.0.0.1",
+				port: 6832,
+				sampler: {
+					type: "Const",
+					options: {}
+				},
+				tracerOptions: {},
+				defaultTags: null
 			}
 		}
 	},
-
-	// tracing: {
-	// 	enabled: true,
-	// 	exporter: {
-	// 		type: "Jaeger",
-	// 		options: {
-	// 			endpoint: null,
-	// 			host: "127.0.0.1",
-	// 			port: 6832,
-	// 			sampler: {
-	// 				type: "Const",
-	// 				options: {}
-	// 			},
-	// 			tracerOptions: {},
-	// 			defaultTags: null
-	// 		}
-	// 	}
-	// },
 
 	// Register custom middlewares
 	middlewares: [],

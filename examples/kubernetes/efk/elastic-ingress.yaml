@@ -4,13 +4,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: elasticsearch-ingress
-  namespace: elastic
+  namespace: logging
   annotations:
     # HTTPS as entry point
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     # Enable TLS
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
+  tls:
+    - secretName: elasticsearch-tls
   rules:
     - host: elastic.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
@@ -19,7 +21,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: elasticsearch-master
+                name: efk-es-http
                 port:
                   number: 9200
 ---
@@ -28,7 +30,7 @@ kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: elasticsearch-redirect
-  namespace: elastic
+  namespace: logging
   annotations:
     # Use redirect Midleware configured
     traefik.ingress.kubernetes.io/router.middlewares: traefik-redirect@kubernetescrd
@@ -43,6 +45,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: elasticsearch-master
+                name: efk-es-http
                 port:
                   number: 9200

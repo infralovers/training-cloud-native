@@ -1,13 +1,13 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: simpleingressroute
+  name: jaeger
   namespace: default
 spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`jaeger.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`jaeger.localhost`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: simplest-query
@@ -16,7 +16,7 @@ spec:
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: ingressroutetls
+  name: jaeger-tls
   namespace: default
 spec:
   entryPoints:
@@ -24,7 +24,7 @@ spec:
   tls:
     certResolver: myresolver
   routes:
-    - match: Host(`jaeger.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`jaeger.localhost`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: simplest-query

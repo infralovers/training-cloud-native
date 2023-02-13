@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: traefik-ingress
   namespace: kube-system
-  annotations:
-    kubernetes.io/ingress.class: traefik
 spec:
   rules:
     - host: traefik.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
@@ -18,8 +16,8 @@ spec:
                 port:
                   number: 9000
 ---
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: traefik-metrics
   namespace: kube-system

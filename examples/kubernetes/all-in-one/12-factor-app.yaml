@@ -14,6 +14,8 @@ data:
   SERVICEDIR: services
   TRANSPORTER: nats://nats:4222
   MONGO_URI: mongodb://mongo/12-factor-app
+  METRICS_ENABLED: "true"
+  TRACING_ENABLED: "true"
 ---
 apiVersion: v1
 kind: Service
@@ -34,8 +36,8 @@ kind: Deployment
 metadata:
   name: api
   namespace: 12-factor-app
-  #annotations:
-  #  "sidecar.jaegertracing.io/inject": "true"
+  annotations:
+   "sidecar.jaegertracing.io/inject": "true"
 spec:
   selector:
     matchLabels:
@@ -48,22 +50,22 @@ spec:
     spec:
       containers:
       - name: api
-        image: commandemy/12-factor-app:v0.1
+        image: commandemy/12-factor-app:v2.0
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: common-env
         env:
           - name: SERVICES
             value: api
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: products
   namespace: 12-factor-app
-  #annotations:
-  #  "sidecar.jaegertracing.io/inject": "true"
+  annotations:
+   "sidecar.jaegertracing.io/inject": "true"
 spec:
   selector:
     matchLabels:
@@ -76,14 +78,14 @@ spec:
     spec:
       containers:
       - name: products
-        image: commandemy/12-factor-app:v0.1
+        image: commandemy/12-factor-app:v2.0
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: common-env
         env:
           - name: SERVICES
             value: products
-
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -224,10 +226,8 @@ spec:
         ports:
         - containerPort: 4222
           name: client
-          hostPort: 4222
         - containerPort: 7422
           name: leafnodes
-          hostPort: 7422
         - containerPort: 6222
           name: cluster
         - containerPort: 8222
@@ -284,3 +284,35 @@ spec:
               # the NATS Server to gracefully terminate the client connections.
               #
               command: ["/bin/sh", "-c", "/nats-server -sl=ldm=/var/run/nats/nats.pid && /bin/sleep 60"]
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: 12-factor-app
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`k8s.localhost`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: 12-factor-app-tls
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`k8s.localhost`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
