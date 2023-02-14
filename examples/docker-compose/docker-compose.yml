@@ -1,0 +1,30 @@
+version: "3.3"
+
+services:
+
+  api:
+    build:
+      context: ../12-factor-app
+    image: 12-factor-app
+    env_file: docker-compose.env
+    environment:
+      SERVICES: api,products
+    networks:
+      - internal
+    ports:
+      - 8181:3000
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:4
+    volumes:
+      - data:/data/db
+    networks:
+      - internal
+
+networks:
+  internal:
+
+volumes:
+  data:
