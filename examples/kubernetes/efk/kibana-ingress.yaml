@@ -14,7 +14,7 @@ spec:
   tls:
     - secretName: kibana-tls
   rules:
-    - host: kibana.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
+    - host: kibana.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
         paths:
           - path: /
@@ -38,7 +38,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: kibana.cno-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
+    - host: kibana.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
       http:
         paths:
           - path: /
