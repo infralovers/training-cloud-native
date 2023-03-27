@@ -1,3 +1,14 @@
+## 1.0.2 (2023-03-27)
+
+#### Bug Fixes
+
+* env name update (#49) (7b1b9970)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (67a6bec7)
+
+
 ## 1.0.1 (2023-03-22)
 
 #### Bug Fixes
