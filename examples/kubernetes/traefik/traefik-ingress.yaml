@@ -1,23 +1,21 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: traefik-ingress
   namespace: kube-system
 spec:
-  rules:
-    - host: traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: traefik-dashboard
-                port:
-                  number: 9000
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix('/dashboard')
+      kind: Rule
+      services:
+      - name: traefik-dashboard
+        port: 9000
+
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: traefik-metrics
   namespace: kube-system
