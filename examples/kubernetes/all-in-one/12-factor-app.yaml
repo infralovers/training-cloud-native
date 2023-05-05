@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: commandemy/12-factor-app:v2.0
+        image: quay.io/infralovers/12-factor-app:latest
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
@@ -78,7 +78,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: commandemy/12-factor-app:v2.0
+        image: quay.io/infralovers/12-factor-app:latest
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
