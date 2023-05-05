@@ -11,3 +11,6 @@ find examples* -type f -exec sed -i -e "s/<ENV-IP>/$HOST_IP/g" {} \;
 
 # Replace <ENV-NAME>
 find examples* -type f -exec sed -i -e "s/<ENV-NAME>/$ENVIRONMENT/g" {} \;
+
+# Replace <ENV-DOMAIN>
+find examples* -type f -exec sed -i -e "s/<ENV-DOMAIN>/$DOMAIN/g" {} \;

@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`jaeger.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`jaeger.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: jaeger-query
@@ -22,7 +22,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`prom.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`prom.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: prometheus-k8s
@@ -37,7 +37,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`grafana.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`grafana.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: grafana

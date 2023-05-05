@@ -7,7 +7,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix('/dashboard')
+    - match: Host(`traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix('/dashboard')
       kind: Rule
       services:
       - name: traefik-dashboard
@@ -24,7 +24,7 @@ spec:
     - web
   routes:
     - kind: Rule
-      match: Host(`traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/metrics`)
+      match: Host(`traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/metrics`)
       services:
         - name: prometheus@internal
           kind: TraefikService

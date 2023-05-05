@@ -9,7 +9,7 @@ spec:
   tls:
     certResolver: myresolver
   routes:
-    - match: Host(`chaos.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.commandemy.training`) && PathPrefix(`/`)
+    - match: Host(`chaos.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: chaos-dashboard
