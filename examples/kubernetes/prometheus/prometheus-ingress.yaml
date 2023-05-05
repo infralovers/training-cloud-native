@@ -6,7 +6,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: prom.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+    - host: prom.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
       http:
         paths:
           - path: /
@@ -25,7 +25,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
   rules:
-    - host: prom.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+    - host: prom.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
       http:
         paths:
           - path: /

@@ -14,7 +14,7 @@ spec:
   tls:
     - secretName: elasticsearch-tls
   rules:
-    - host: elastic.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+    - host: elastic.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
       http:
         paths:
           - path: /
@@ -38,7 +38,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   rules:
-    - host: elastic.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+    - host: elastic.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
       http:
         paths:
           - path: /

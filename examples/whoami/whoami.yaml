@@ -51,7 +51,7 @@ spec:
   tls:
     certResolver: myresolver
   routes:
-    - match: Host(`whoami.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
+    - match: Host(`whoami.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: whoami
@@ -65,7 +65,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`whoami.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
+    - match: Host(`whoami.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: whoami
