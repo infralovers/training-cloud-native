@@ -1,3 +1,14 @@
+## 1.0.3 (2023-05-10)
+
+#### Bug Fixes
+
+* update to drop user and add ENV-DOMAIN (ce4f6bf2)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (526b29bc)
+
+
 ## 1.0.2 (2023-03-27)
 
 #### Bug Fixes
