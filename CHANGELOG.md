@@ -1,3 +1,14 @@
+## 1.0.4 (2023-05-10)
+
+#### Bug Fixes
+
+* update registry (28b62b03)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (c5baf061)
+
+
 ## 1.0.3 (2023-05-10)
 
 #### Bug Fixes
