@@ -1,3 +1,19 @@
+## 1.1.0 (2023-05-11)
+
+#### Feature
+
+* add scripts ready to generate entries (3eb2b1b6)
+
+#### Bug Fixes
+
+* traefik dashboard config (434c7a6d)
+* disable tracing and set logging to full (28a7146c)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (5df32df8)
+
+
 ## 1.0.4 (2023-05-10)
 
 #### Bug Fixes
