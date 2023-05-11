@@ -14,8 +14,9 @@ data:
   SERVICEDIR: services
   TRANSPORTER: nats://nats:4222
   MONGO_URI: mongodb://mongo/12-factor-app
+  LOGGER_OPTIONS_FORMATTER: full # use json for structured logging
   METRICS_ENABLED: "true"
-  TRACING_ENABLED: "true"
+  # TRACING_ENABLED: "true"
 ---
 apiVersion: v1
 kind: Service
@@ -36,8 +37,8 @@ kind: Deployment
 metadata:
   name: api
   namespace: 12-factor-app
-  annotations:
-   "sidecar.jaegertracing.io/inject": "true"
+  # annotations:
+  #  "sidecar.jaegertracing.io/inject": "true"
 spec:
   selector:
     matchLabels:
@@ -64,8 +65,8 @@ kind: Deployment
 metadata:
   name: products
   namespace: 12-factor-app
-  annotations:
-   "sidecar.jaegertracing.io/inject": "true"
+  # annotations:
+  #  "sidecar.jaegertracing.io/inject": "true"
 spec:
   selector:
     matchLabels:

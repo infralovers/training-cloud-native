@@ -1,17 +1,23 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: traefik-ingress
   namespace: kube-system
+  annotations:
+    kubernetes.io/ingress.class: traefik
 spec:
-  entryPoints:
-    - web
-  routes:
-    - match: Host(`traefik.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix('/dashboard')
-      kind: Rule
-      services:
-      - name: traefik-dashboard
-        port: 9000
+  rules:
+    - host: traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: traefik-dashboard
+                port:
+                  number: 9000
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
