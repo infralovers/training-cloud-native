@@ -1,10 +1,10 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: otel-sidecar
+  name: sidecar
+  namespace: 12-factor-app
 spec:
   mode: sidecar
-  hostNetwork: true
   config: |
     receivers:
       otlp:
@@ -12,14 +12,19 @@ spec:
           grpc:
           http:
     processors:
+      batch:
     exporters:
+      logging:
       otlp:
-        endpoint: "http://oteld-collector.default.svc.cluster.local:4317"
+        endpoint: "otel-collector-collector.opentelemetry-operator-system.svc.cluster.local:4317"
         tls:
           insecure: true
     service:
+      telemetry:
+        logs:
+          level: "debug"
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [otlp]
+          exporters: [logging, otlp]

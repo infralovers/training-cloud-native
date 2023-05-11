@@ -1,13 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 12-factor-app
+---
 apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
-  name: non-otel-instrumentation
+  name: nodejs-instrumentation
+  namespace: 12-factor-app
 spec:
-  resource:
-    addK8sUIDAttributes: true
   propagators:
     - tracecontext
     - baggage
-    - b3
   sampler:
     type: always_on
+  nodejs:
