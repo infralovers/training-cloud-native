@@ -1,23 +1,20 @@
 apiVersion: apm.k8s.elastic.co/v1
 kind: ApmServer
 metadata:
-  name: apm-server-staging
-  namespace: logging
+  name: apm-server-elastic
+  namespace: default
 spec:
-  version: 7.12.0 ### define the version
+  version: 8.8.1
   count: 1
   http:
     tls:
       selfSignedCertificate:  ### disable tls will be easy for test
         disabled: true        ### not recommend for production
-  config:
-    apm-server:
-      capture_personal_data: true
-    instrumentation:
-      enabled: true
-    output:
-      elasticsearch:
-        hosts: ["efk-es-http.logging.svc.cluster.local:9200"]
-    logging.level: info ### enable logging for debug
-    logging.to_stderr: true ### output error if any
-    logging.metrics.enabled: true
+  elasticsearchRef:
+    name: "elasticsearch"
+  kibanaRef:
+    name: "kibana"
+  #config:
+  #  output:
+  #    elasticsearch:
+  #      hosts: ["elasticsearch-es-http.default.svc:9200"]

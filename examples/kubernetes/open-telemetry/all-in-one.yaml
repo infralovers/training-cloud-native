@@ -1,7 +1,7 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: otel-demo
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: otel-demo
 ---
 # Source: opentelemetry-demo/charts/grafana/templates/serviceaccount.yaml
 apiVersion: v1
@@ -242,6 +242,7 @@ data:
           exporters:
           - prometheus
           - logging
+          - otlp/elastic
           processors:
           - memory_limiter
           - filter/ottl
@@ -255,6 +256,7 @@ data:
           - otlp
           - logging
           - spanmetrics
+          - otlp/elastic
           processors:
           - memory_limiter
           - batch
@@ -302,11 +304,6 @@ data:
           own_namespace: true
           names: [otel-demo, kube-system]
         role: pod
-      relabel_configs:
-      - action: keep
-        regex: true
-        source_labels:
-        - __meta_kubernetes_pod_annotation_opentelemetry_community_demo
   recording_rules.yml: |
     {}
   rules: |
@@ -8610,7 +8607,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`prom.cno-01-01.owl.co-pla.training`) && PathPrefix(`/`)
+    - match: Host(`prom.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: opentelemetry-demo-prometheus-server
@@ -8625,7 +8622,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`jaeger.cno-01-01.owl.co-pla.training`) && PathPrefix(`/`)
+    - match: Host(`jaeger.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: opentelemetry-demo-jaeger-query
@@ -8640,7 +8637,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`frontend.cno-01-01.owl.co-pla.training`) && PathPrefix(`/`)
+    - match: Host(`frontend.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: opentelemetry-demo-frontend
@@ -8655,7 +8652,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`grafana.cno-01-01.owl.co-pla.training`) && PathPrefix(`/`)
+    - match: Host(`grafana.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: opentelemetry-demo-grafana
