@@ -2271,7 +2271,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`frontend.cno-01-01.owl.co-pla.training`) && PathPrefix(`/`)
+    - match: Host(`frontend.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>`) && PathPrefix(`/`)
       kind: Rule
       services:
         - name: opentelemetry-demo-frontend
