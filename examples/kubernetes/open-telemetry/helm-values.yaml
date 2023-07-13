@@ -1,0 +1,60 @@
+default:
+  envOverrides:
+  - name: 'OTEL_COLLECTOR_NAME'
+    value: $(OTEL_K8S_NODE_NAME)
+opentelemetry-collector:
+  mode: daemonset
+  presets:
+    logsCollection:
+      enabled: true
+      includeCollectorLogs: false
+  config:
+    extensions:
+      basicauth/traces:
+        client_auth:
+          username: "${TRACES_USER_ID}"
+          password: "${API_KEY}"
+      basicauth/metrics:
+        client_auth:
+          username: "${METRICS_USER_ID}"
+          password: "${API_KEY}"
+      basicauth/logs:
+        client_auth:
+          username: "${LOGS_USER_ID}"
+          password: "${API_KEY}"   
+
+    exporters:
+      otlp:
+        endpoint: ${TRACES_URL}
+        tls:
+          insecure: false
+        auth:
+          authenticator: basicauth/traces
+
+      prometheusremotewrite:
+        endpoint: ${METRICS_URL}
+        auth:
+          authenticator: basicauth/metrics
+
+      loki:
+        endpoint: ${LOGS_URL}
+        auth:
+          authenticator: basicauth/logs
+
+    processors:
+      spanmetrics:
+        metrics_exporter: prometheusremotewrite
+
+    service:
+      extensions: [ basicauth/traces, basicauth/metrics, basicauth/logs, health_check , memory_ballast ]
+      pipelines:
+        metrics:
+          exporters: [prometheusremotewrite]
+        logs:
+          receivers: [filelog]
+          exporters: [loki]
+components:
+  frontend:
+    resources:
+      limits:
+        memory: 500Mi
