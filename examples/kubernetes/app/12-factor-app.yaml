@@ -1,0 +1,122 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 12-factor-app
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-env
+  namespace: 12-factor-app
+data:
+  NAMESPACE: ""
+  LOGLEVEL: info
+  SERVICEDIR: services
+  TRANSPORTER: nats://nats:4222
+  MONGO_URI: mongodb://mongo/12-factor-app
+  LOGGER_OPTIONS_FORMATTER: full # use json for structured logging
+  METRICS_ENABLED: "true"
+  # TRACING_ENABLED: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: 12-factor-app
+  labels:
+    app: api
+spec:
+  selector:
+    app: api
+  ports:
+  - name: web
+    port: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: 12-factor-app
+  # annotations:
+  #  "sidecar.jaegertracing.io/inject": "true"
+spec:
+  selector:
+    matchLabels:
+      app: api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: ghcr.io/infralovers/training-cloud-native:v.enabledTracing
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: common-env
+        env:
+          - name: SERVICES
+            value: api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products
+  namespace: 12-factor-app
+  # annotations:
+  #  "sidecar.jaegertracing.io/inject": "true"
+spec:
+  selector:
+    matchLabels:
+      app: products
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      containers:
+      - name: products
+        image: ghcr.io/infralovers/training-cloud-native:v.enabledTracing
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: common-env
+        env:
+          - name: SERVICES
+            value: products
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: 12-factor-app
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`k8s.cno-01-01.ant.infralovers.academy`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: 12-factor-app-tls
+  namespace: 12-factor-app
+spec:
+  entryPoints:
+    - websecure
+  tls:
+    certResolver: myresolver
+  routes:
+    - match: Host(`k8s.cno-01-01.ant.infralovers.academy`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
