@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: quay.io/infralovers/12-factor-app:latest
+        image: ghcr.io/infralovers/training-cloud-native:v.enabledTracing
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
@@ -85,7 +85,7 @@ spec:
     spec:
       containers:
       - name: products
-        image: quay.io/infralovers/12-factor-app:latest
+        image: ghcr.io/infralovers/training-cloud-native:v.enabledTracing
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
