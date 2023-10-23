@@ -1,3 +1,14 @@
+## 1.1.1 (2023-10-23)
+
+#### Bug Fixes
+
+* cno updates  (#51) (ffc9f232)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (04408817)
+
+
 ## 1.1.0 (2023-05-11)
 
 #### Feature
