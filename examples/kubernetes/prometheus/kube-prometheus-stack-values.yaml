@@ -6,3 +6,7 @@ prometheus:
     podMonitorNamespaceSelector:
       matchLabels:
         prometheus: monitoring
+
+grafana:
+  adminPassword: Cod3Can!
+  

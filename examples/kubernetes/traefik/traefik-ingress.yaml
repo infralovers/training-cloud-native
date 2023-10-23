@@ -8,7 +8,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-    - host: traefik.<ENV-NAME>-user-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
+    - host: traefik.<ENV-NAME>-<ENV-USER-ID>-01.<ENV-ANIMAL>.<ENV-DOMAIN>
       http:
         paths:
           - path: /
