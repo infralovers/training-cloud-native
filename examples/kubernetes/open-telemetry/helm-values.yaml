@@ -1,0 +1,5 @@
+components:
+  frontend:
+    resources:
+      limits:
+        memory: 500Mi
