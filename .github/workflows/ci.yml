@@ -21,4 +21,5 @@ jobs:
       score: 50
       platforms: "linux/amd64, linux/arm64"
       release: true
+      image_name: "training-flask-app"
       
