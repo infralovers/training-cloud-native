@@ -1,3 +1,15 @@
+## 1.1.2 (2024-05-08)
+
+#### Bug Fixes
+
+* Revert image name (d54c6d02)
+* Change workflow (#52) (bb569f3b)
+
+#### Chores
+
+* **ci:** commit changes from go-semantic-release (3eca2372)
+
+
 ## 1.1.1 (2023-10-23)
 
 #### Bug Fixes
